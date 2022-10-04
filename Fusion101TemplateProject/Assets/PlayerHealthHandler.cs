@@ -1,4 +1,5 @@
 using Fusion;
+using System;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
@@ -67,8 +68,17 @@ public class PlayerHealthHandler : NetworkBehaviour
 		playerMesh.material.color = originalColor;
 
 		healthbarImage.fillAmount = playerHealth / maxHealth;
+
+		if (playerHealth <= 0)
+		{
+			Respawn();
+		}
 	}
 
+	private void Respawn()
+	{
+		
+	}
 
 	public void DecreaseHealth(float damage)
 	{
