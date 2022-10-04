@@ -1,21 +1,19 @@
 using Fusion;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerNetworkSetup : NetworkBehaviour
 {
-  [SerializeField] private Camera playerCam;
+	[SerializeField] private Camera playerCam;
 
-  [SerializeField] private MeshRenderer playerModel;
+	[SerializeField] private MeshRenderer playerModel;
 
-  [SerializeField] private Material enemyMat;
+	[SerializeField] private Material enemyMat;
 
 	[SerializeField] private GameObject colliderObject;
 
 	[SerializeField] private Canvas remotePlayerCanvas;
 
-	private void Start()
+	public override void Spawned()
 	{
 		if (!Object.HasInputAuthority)
 		{

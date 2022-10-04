@@ -15,6 +15,8 @@ public class NetworkSpawner : NetworkBehaviour
 	private Dictionary<PlayerRef, NetworkObject> spawnedCharacters=new Dictionary<PlayerRef, NetworkObject>();
 
 	private NetworkRunner netRunner;
+
+
 	private void Start()
 	{
 		spawnPoints = GameObject.FindGameObjectsWithTag("SpawnPoint").ToList();

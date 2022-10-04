@@ -57,21 +57,49 @@ public class PlayerShootHandler : NetworkBehaviour
 
 	private void ShootWithRaycast()
 	{
-		Ray shootRay = new Ray(shootCrosshairTransform.position,shootCrosshairTransform.forward);
+		LagCompensatedHit hit = new LagCompensatedHit();
 
-		RaycastHit hitTarget = new RaycastHit();
+		Runner.LagCompensation.Raycast(shootCrosshairTransform.position, shootCrosshairTransform.forward, 10,Object.InputAuthority,out hit,targetLayers);
 
-		if (Physics.Raycast(shootRay,out hitTarget, 100,targetLayers))
+		if (hit.Hitbox)
 		{
-			print(hitTarget.collider.tag);
+			GameObject hitRoot = hit.Hitbox.Root.gameObject;
 
-			switch (hitTarget.collider.tag)
+			switch (hitRoot.tag)
 			{
 				case "Player":
-					hitTarget.collider.GetComponentInParent<PlayerHealthHandler>().DecreaseHealth(1);
+					PlayerHealthHandler enemyHealthHandler = hitRoot.GetComponent<PlayerHealthHandler>();
+					if (enemyHealthHandler.ReturnUserHealth()>0)
+					{
+						enemyHealthHandler.DecreaseHealth(1);
+					}
 					break;
 			}
 		}
+
+		
+
+
+
+		#region Commented Code - Old Shooting logic without Hitbox
+
+		//Ray shootRay = new Ray(shootCrosshairTransform.position,shootCrosshairTransform.forward);
+
+		//RaycastHit hitTarget = new RaycastHit();
+
+		////if (Physics.Raycast(shootRay,out hitTarget, 100,targetLayers))
+		////{
+		////	print(hitTarget.collider.tag);
+
+		////	switch (hitTarget.collider.tag)
+		////	{
+		////		case "Player":
+		////			hitTarget.collider.GetComponentInParent<PlayerHealthHandler>().DecreaseHealth(1);
+		////			break;
+		////	}
+		////}
+		///
+		#endregion
 	}
 	#endregion
 

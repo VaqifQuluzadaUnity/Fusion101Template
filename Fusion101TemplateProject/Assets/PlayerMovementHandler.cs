@@ -39,7 +39,6 @@ public class PlayerMovementHandler : NetworkBehaviour
 	{
 		
 		playerRb.velocity = (playerRb.transform.forward * movementInput.z + playerRb.transform.right * movementInput.x) * Runner.DeltaTime * playerCurrentSpeed;
-		//print(playerRb.velocity);
 	}
 
 	private void RotatePlayer(Vector2 mouseInput)

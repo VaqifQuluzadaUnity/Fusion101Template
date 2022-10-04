@@ -6,20 +6,15 @@ using Fusion.Sockets;
 using System;
 using System.Threading.Tasks;
 
-public class LocalInputHandler : MonoBehaviour,INetworkRunnerCallbacks
+public class LocalInputHandler : NetworkBehaviour,INetworkRunnerCallbacks
 {
 	private const string HORIZONTAL_INPUT = "Horizontal";
 
 	private const string VERTICAL_INPUT = "Vertical";
 
-	private int shootRate = 1000;
+	[SerializeField] private float shootRate = 1;
 
-	private bool canShoot = true;
-
-	private void Start()
-	{
-		canShoot = true;
-	}
+	private TickTimer shootCooldown { get; set; }
 
 	public void OnInput(NetworkRunner runner, NetworkInput input)
 	{
@@ -37,26 +32,29 @@ public class LocalInputHandler : MonoBehaviour,INetworkRunnerCallbacks
 		inputData.mouseInput = new Vector2(mouseX,mouseY);
 
 
-		if (canShoot)
-		{
-			inputData.isShoot = Input.GetMouseButtonDown(0);
-		}
 
-		ShootDelay();
+		if (Input.GetMouseButtonDown(0))
+		{
+			Debug.Log(shootCooldown.ExpiredOrNotRunning(Runner));
+
+			if (shootCooldown.ExpiredOrNotRunning(Runner)==false)
+			{
+				print("Shoot cooldown not ended");
+			}
+			else
+			{
+				inputData.isShoot = true;
+
+				shootCooldown = TickTimer.CreateFromSeconds(Runner, shootRate);
+			}
+			
+
+		}
+			
 
 		input.Set(inputData);
 
 	}
-
-	private async void ShootDelay()
-	{
-		canShoot = false;
-
-		await Task.Delay(shootRate);
-
-		canShoot = true;
-	}
-
 
 
 	#region Non-Used Interface methods
