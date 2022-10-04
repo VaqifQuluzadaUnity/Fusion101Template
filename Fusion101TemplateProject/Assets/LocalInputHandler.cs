@@ -4,6 +4,7 @@ using UnityEngine;
 using Fusion;
 using Fusion.Sockets;
 using System;
+using System.Threading.Tasks;
 
 public class LocalInputHandler : MonoBehaviour,INetworkRunnerCallbacks
 {
@@ -11,7 +12,14 @@ public class LocalInputHandler : MonoBehaviour,INetworkRunnerCallbacks
 
 	private const string VERTICAL_INPUT = "Vertical";
 
+	private int shootRate = 1000;
 
+	private bool canShoot = true;
+
+	private void Start()
+	{
+		canShoot = true;
+	}
 
 	public void OnInput(NetworkRunner runner, NetworkInput input)
 	{
@@ -28,9 +36,27 @@ public class LocalInputHandler : MonoBehaviour,INetworkRunnerCallbacks
 
 		inputData.mouseInput = new Vector2(mouseX,mouseY);
 
+
+		if (canShoot)
+		{
+			inputData.isShoot = Input.GetMouseButtonDown(0);
+		}
+
+		ShootDelay();
+
 		input.Set(inputData);
 
 	}
+
+	private async void ShootDelay()
+	{
+		canShoot = false;
+
+		await Task.Delay(shootRate);
+
+		canShoot = true;
+	}
+
 
 
 	#region Non-Used Interface methods

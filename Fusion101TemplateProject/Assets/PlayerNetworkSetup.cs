@@ -11,6 +11,10 @@ public class PlayerNetworkSetup : NetworkBehaviour
 
   [SerializeField] private Material enemyMat;
 
+	[SerializeField] private GameObject colliderObject;
+
+	[SerializeField] private Canvas remotePlayerCanvas;
+
 	private void Start()
 	{
 		if (!Object.HasInputAuthority)
@@ -18,7 +22,7 @@ public class PlayerNetworkSetup : NetworkBehaviour
 			playerModel.material = enemyMat;
 			playerModel.name = "Enemy " + Object.Id;
 			playerCam.enabled = false;
-
+			remotePlayerCanvas.enabled = false;
 			Destroy(playerCam.GetComponent<AudioListener>());
 			return;
 		}
