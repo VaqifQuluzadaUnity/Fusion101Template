@@ -1,11 +1,10 @@
-using UnityEngine;
 using Fusion;
-using System;
+using UnityEngine;
 
 public class PlayerShootHandler : NetworkBehaviour
 {
-  [Networked(OnChanged =nameof(OnShoot))]
-  [SerializeField] private NetworkBool isShoot { get; set; }
+	[Networked(OnChanged = nameof(OnShoot))]
+	[SerializeField] private NetworkBool isShoot { get; set; }
 
 	[SerializeField] private Transform shootCrosshairTransform;
 
@@ -32,7 +31,7 @@ public class PlayerShootHandler : NetworkBehaviour
 
 	public override void FixedUpdateNetwork()
 	{
-		if(Runner.TryGetInputForPlayer<NetworkInputData>(Object.InputAuthority,out NetworkInputData data))
+		if (Runner.TryGetInputForPlayer<NetworkInputData>(Object.InputAuthority, out NetworkInputData data))
 		{
 			isShoot = data.isShoot;
 
@@ -59,7 +58,7 @@ public class PlayerShootHandler : NetworkBehaviour
 	{
 		LagCompensatedHit hit = new LagCompensatedHit();
 
-		Runner.LagCompensation.Raycast(shootCrosshairTransform.position, shootCrosshairTransform.forward, 10,Object.InputAuthority,out hit,targetLayers);
+		Runner.LagCompensation.Raycast(shootCrosshairTransform.position, shootCrosshairTransform.forward, 10, Object.InputAuthority, out hit, targetLayers);
 
 		if (hit.Hitbox)
 		{
@@ -69,15 +68,25 @@ public class PlayerShootHandler : NetworkBehaviour
 			{
 				case "Player":
 					PlayerHealthHandler enemyHealthHandler = hitRoot.GetComponent<PlayerHealthHandler>();
-					if (enemyHealthHandler.ReturnUserHealth()>0)
+					if (enemyHealthHandler.ReturnUserHealth() > 0)
 					{
 						enemyHealthHandler.DecreaseHealth(1);
+					}
+					break;
+
+				case "Zombie":
+					print("Shooting zombie");
+					ZombieNetworkHealthHandler zombieHealthHandler = hitRoot.GetComponent<ZombieNetworkHealthHandler>();
+
+					if (zombieHealthHandler.ReturnZombieHealth() > 0)
+					{
+						zombieHealthHandler.DecreaseZombieHealth(1);
 					}
 					break;
 			}
 		}
 
-		
+
 
 
 

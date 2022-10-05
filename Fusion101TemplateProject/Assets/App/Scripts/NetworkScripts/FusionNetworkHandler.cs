@@ -66,7 +66,6 @@ namespace DynamicBox.Controllers
 		private void OnCreateRoomButtonPressedEventHandler(OnCreateRoomButtonPressedEvent eventDetails)
 		{
 			JoinLobbyAndStartGame(eventDetails.RoomData);
-
 		}
 
 		private void OnQuickGameButtonPressedEventHandler(OnQuickGameButtonPressedEvent eventDetails)

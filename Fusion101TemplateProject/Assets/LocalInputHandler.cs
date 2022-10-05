@@ -6,7 +6,7 @@ using Fusion.Sockets;
 using System;
 using System.Threading.Tasks;
 
-public class LocalInputHandler : NetworkBehaviour,INetworkRunnerCallbacks
+public class LocalInputHandler : MonoBehaviour,INetworkRunnerCallbacks
 {
 	private const string HORIZONTAL_INPUT = "Horizontal";
 
@@ -35,9 +35,9 @@ public class LocalInputHandler : NetworkBehaviour,INetworkRunnerCallbacks
 
 		if (Input.GetMouseButtonDown(0))
 		{
-			Debug.Log(shootCooldown.ExpiredOrNotRunning(Runner));
+			Debug.Log(shootCooldown.ExpiredOrNotRunning(runner));
 
-			if (shootCooldown.ExpiredOrNotRunning(Runner)==false)
+			if (shootCooldown.ExpiredOrNotRunning(runner) ==false)
 			{
 				print("Shoot cooldown not ended");
 			}
@@ -45,7 +45,7 @@ public class LocalInputHandler : NetworkBehaviour,INetworkRunnerCallbacks
 			{
 				inputData.isShoot = true;
 
-				shootCooldown = TickTimer.CreateFromSeconds(Runner, shootRate);
+				shootCooldown = TickTimer.CreateFromSeconds(runner, shootRate);
 			}
 			
 

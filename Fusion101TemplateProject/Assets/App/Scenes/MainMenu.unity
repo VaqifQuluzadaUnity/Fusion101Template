@@ -9592,5 +9592,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: FusionNetworkHandler
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2633710399746921145, guid: 992e15f0e122dcc4e934336dafc0200b, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 992e15f0e122dcc4e934336dafc0200b, type: 3}

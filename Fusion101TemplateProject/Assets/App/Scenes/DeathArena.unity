@@ -124,7 +124,7 @@ NavMeshSettings:
     preserveTilesOutsideBounds: 0
     debug:
       m_Flags: 0
-  m_NavMeshData: {fileID: 0}
+  m_NavMeshData: {fileID: 23800000, guid: a58a4d10daaffe84980d58118c0759ba, type: 2}
 --- !u!1 &548731703
 GameObject:
   m_ObjectHideFlags: 0
@@ -284,6 +284,31 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 683089533648545385, guid: dfce09941a105a8468a99a7c34534945,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 4294967295
+      objectReference: {fileID: 0}
+    - target: {fileID: 2546545054916696308, guid: dfce09941a105a8468a99a7c34534945,
+        type: 3}
+      propertyPath: zombiePrefabs.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2546545054916696308, guid: dfce09941a105a8468a99a7c34534945,
+        type: 3}
+      propertyPath: zombiePrefabs.Array.data[0].RawGuidValue.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2546545054916696308, guid: dfce09941a105a8468a99a7c34534945,
+        type: 3}
+      propertyPath: zombiePrefabs.Array.data[0].RawGuidValue.Array.data[0]
+      value: 2640344883615078925
+      objectReference: {fileID: 0}
+    - target: {fileID: 2546545054916696308, guid: dfce09941a105a8468a99a7c34534945,
+        type: 3}
+      propertyPath: zombiePrefabs.Array.data[0].RawGuidValue.Array.data[1]
+      value: -8553532837986069221
       objectReference: {fileID: 0}
     - target: {fileID: 2628902554346118584, guid: dfce09941a105a8468a99a7c34534945,
         type: 3}

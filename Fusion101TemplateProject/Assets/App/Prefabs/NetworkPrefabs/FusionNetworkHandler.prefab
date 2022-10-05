@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 4578324149554519937}
   - component: {fileID: 4578324149554520063}
   - component: {fileID: 4578324149554520062}
+  - component: {fileID: 2633710399746921145}
   m_Layer: 5
   m_Name: FusionNetworkHandler
   m_TagString: Untagged
@@ -91,5 +92,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe14d99590de66446a67dec87ac21f50, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _interpolationDataSource: 0
   shootRate: 0.25
+--- !u!114 &2633710399746921145
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4578324149554519939}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73d016dab9cf45841bede03ed67f1e3c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
