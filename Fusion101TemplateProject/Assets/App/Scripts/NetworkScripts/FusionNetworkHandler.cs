@@ -19,6 +19,8 @@ namespace DynamicBox.Controllers
 		[SerializeField] private NetworkRunner networkRunnerPrefab;
 
 		[SerializeField] private LocalInputHandler localInputHandler;
+
+		[SerializeField] private HostMigrationHandler hostMigrationHandler;
 		
 		private NetworkSceneManagerDefault sceneManager;
 
@@ -51,9 +53,7 @@ namespace DynamicBox.Controllers
 
 			sceneManager = currentNetworkRunner.GetComponent<NetworkSceneManagerDefault>();
 
-			currentNetworkRunner.AddCallbacks(this);
-
-			currentNetworkRunner.AddCallbacks(localInputHandler);
+			SetupRunnerCallbackListeners(currentNetworkRunner);
 
 			Application.targetFrameRate = 60;
 
@@ -127,6 +127,7 @@ namespace DynamicBox.Controllers
 
 		public void OnHostMigration(NetworkRunner runner, HostMigrationToken hostMigrationToken)
 		{
+
 		}
 
 		public void OnInput(NetworkRunner runner, NetworkInput input)
@@ -212,17 +213,6 @@ namespace DynamicBox.Controllers
 			print("Joined lobby " + currentNetworkRunner.LobbyInfo.Name);
 		}
 
-		public async void JoinLobbyAndStartGame(RoomData roomData)
-		{
-			Task<StartGameResult> task = currentNetworkRunner.JoinSessionLobby(SessionLobby.Custom, roomData.lobbyName);
-
-			await task;
-
-			print("Joined lobby " + currentNetworkRunner.LobbyInfo.Name);
-
-			CreateRoom(roomData);
-		}
-
 		private async Task JoinRoom(string roomName)
 		{
 			StartGameResult result = await currentNetworkRunner.StartGame
@@ -302,7 +292,12 @@ namespace DynamicBox.Controllers
 
 		}
 
-
+		private void SetupRunnerCallbackListeners(NetworkRunner runner)
+		{
+			runner.AddCallbacks(this);
+			runner.AddCallbacks(localInputHandler);
+			runner.AddCallbacks(hostMigrationHandler);
+		}
 
 		IEnumerator WaitUntilSceneDone(PlayerRef player)
 		{
@@ -313,10 +308,21 @@ namespace DynamicBox.Controllers
 		}
 		#endregion
 
-		private void OnApplicationQuit()
+		#region Public Methods
+
+		public async void JoinLobbyAndStartGame(RoomData roomData)
 		{
-			currentNetworkRunner.Shutdown();
+			Task<StartGameResult> task = currentNetworkRunner.JoinSessionLobby(SessionLobby.Custom, roomData.lobbyName);
+
+			await task;
+
+			print("Joined lobby " + currentNetworkRunner.LobbyInfo.Name);
+
+			CreateRoom(roomData);
 		}
+
+
+		#endregion
 	}
 }
 
