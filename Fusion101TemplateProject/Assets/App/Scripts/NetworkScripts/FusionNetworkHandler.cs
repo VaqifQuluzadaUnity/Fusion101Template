@@ -12,13 +12,17 @@ using UnityEngine.SceneManagement;
 
 namespace DynamicBox.Controllers
 {
-	[RequireComponent(typeof(NetworkRunner))]
-	[RequireComponent(typeof(NetworkSceneManagerDefault))]
 	public class FusionNetworkHandler : MonoBehaviour, INetworkRunnerCallbacks
 	{
-		[SerializeField] private NetworkRunner networkRunner;
+		public static FusionNetworkHandler instance;
 
-		[SerializeField] private NetworkSceneManagerDefault sceneManager;
+		[SerializeField] private NetworkRunner networkRunnerPrefab;
+
+		[SerializeField] private LocalInputHandler localInputHandler;
+		
+		private NetworkSceneManagerDefault sceneManager;
+
+		private NetworkRunner currentNetworkRunner;
 
 		private int sessionCount;
 
@@ -30,13 +34,30 @@ namespace DynamicBox.Controllers
 		#endregion
 		#region Unity Methods
 
+
+		private void Awake()
+		{
+			if(instance!=null && instance != this)
+			{
+				Destroy(instance.gameObject);
+			}
+			instance = this;
+			DontDestroyOnLoad(this);
+		}
+
 		private void Start()
 		{
+			currentNetworkRunner = Instantiate(networkRunnerPrefab);
 
-			JoinLobbyAtStartup();
+			sceneManager = currentNetworkRunner.GetComponent<NetworkSceneManagerDefault>();
 
+			currentNetworkRunner.AddCallbacks(this);
+
+			currentNetworkRunner.AddCallbacks(localInputHandler);
 
 			Application.targetFrameRate = 60;
+
+			JoinLobbyAtStartup();
 		}
 
 
@@ -70,7 +91,7 @@ namespace DynamicBox.Controllers
 
 		private void OnQuickGameButtonPressedEventHandler(OnQuickGameButtonPressedEvent eventDetails)
 		{
-			JoinRandomRoom(networkRunner);
+			JoinRandomRoom(currentNetworkRunner);
 		}
 
 		private void OnJoinRoomButtonPressedEventHandler(OnJoinRoomButtonPressedEvent eventDetails)
@@ -101,7 +122,7 @@ namespace DynamicBox.Controllers
 
 		public void OnDisconnectedFromServer(NetworkRunner runner)
 		{
-			networkRunner.Shutdown();
+			currentNetworkRunner.Shutdown();
 		}
 
 		public void OnHostMigration(NetworkRunner runner, HostMigrationToken hostMigrationToken)
@@ -182,29 +203,29 @@ namespace DynamicBox.Controllers
 
 		private async void JoinLobbyAtStartup()
 		{
-			Task<StartGameResult> task = networkRunner.JoinSessionLobby(SessionLobby.Custom, "Default");
+			Task<StartGameResult> task = currentNetworkRunner.JoinSessionLobby(SessionLobby.Custom, "Default");
 
 			await task;
 
 			EventManager.Instance.Raise(new OnConnectedToServerEvent());
 
-			print("Joined lobby " + networkRunner.LobbyInfo.Name);
+			print("Joined lobby " + currentNetworkRunner.LobbyInfo.Name);
 		}
 
 		public async void JoinLobbyAndStartGame(RoomData roomData)
 		{
-			Task<StartGameResult> task = networkRunner.JoinSessionLobby(SessionLobby.Custom, roomData.lobbyName);
+			Task<StartGameResult> task = currentNetworkRunner.JoinSessionLobby(SessionLobby.Custom, roomData.lobbyName);
 
 			await task;
 
-			print("Joined lobby " + networkRunner.LobbyInfo.Name);
+			print("Joined lobby " + currentNetworkRunner.LobbyInfo.Name);
 
 			CreateRoom(roomData);
 		}
 
 		private async Task JoinRoom(string roomName)
 		{
-			StartGameResult result = await networkRunner.StartGame
+			StartGameResult result = await currentNetworkRunner.StartGame
 				(new StartGameArgs()
 				{
 					GameMode = GameMode.Client,
@@ -223,7 +244,7 @@ namespace DynamicBox.Controllers
 		}
 		private async void CreateRoom(RoomData roomData)
 		{
-			networkRunner.ProvideInput = true;
+			currentNetworkRunner.ProvideInput = true;
 
 			Dictionary<string, SessionProperty> sessionProperties = new Dictionary<string, SessionProperty>
 			{
@@ -246,9 +267,9 @@ namespace DynamicBox.Controllers
 				SessionProperties = sessionProperties
 			};
 
-			await networkRunner.StartGame(roomCreateParams);
+			await currentNetworkRunner.StartGame(roomCreateParams);
 
-			networkRunner.SessionInfo.IsVisible = roomData.isVisible;
+			currentNetworkRunner.SessionInfo.IsVisible = roomData.isVisible;
 		}
 
 		private async Task JoinRandomRoom(NetworkRunner runner)
@@ -294,7 +315,7 @@ namespace DynamicBox.Controllers
 
 		private void OnApplicationQuit()
 		{
-			networkRunner.Shutdown();
+			currentNetworkRunner.Shutdown();
 		}
 	}
 }

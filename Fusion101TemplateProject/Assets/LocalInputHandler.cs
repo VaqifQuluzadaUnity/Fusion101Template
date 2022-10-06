@@ -14,6 +14,8 @@ public class LocalInputHandler : MonoBehaviour,INetworkRunnerCallbacks
 
 	[SerializeField] private float shootRate = 1;
 
+	private NetworkRunner runner;
+
 	private TickTimer shootCooldown { get; set; }
 
 	public void OnInput(NetworkRunner runner, NetworkInput input)
