@@ -38,7 +38,7 @@
     "NetworkIdIsObjectName": false,
     "HideNetworkObjectInactivityGuard": false,
     "EnableHostMigration": true,
-    "HostMigrationSnapshotInterval": 30,
+    "HostMigrationSnapshotInterval": 5,
     "Simulation": {
         "InputDataWordCount": 0,
         "TickRate": 60,

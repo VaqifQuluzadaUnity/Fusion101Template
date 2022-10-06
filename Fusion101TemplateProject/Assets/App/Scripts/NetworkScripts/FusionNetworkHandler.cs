@@ -162,6 +162,14 @@ namespace DynamicBox.Controllers
 
 		public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
 		{
+			if (shutdownReason == ShutdownReason.HostMigration)
+			{
+				print("Shut down for host migration");
+			}
+			else
+			{
+				SceneManager.LoadScene(0);
+			}
 		}
 
 		public void OnUserSimulationMessage(NetworkRunner runner, SimulationMessagePtr message)
