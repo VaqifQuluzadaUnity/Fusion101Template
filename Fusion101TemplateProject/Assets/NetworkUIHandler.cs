@@ -6,12 +6,8 @@ using System;
 
 public class NetworkUIHandler : NetworkBehaviour
 {
-
 	[SerializeField] private GameObject networkCanvas;
 	
-
-	
-
 	public void OnQuitButtonPressed()
 	{
 		Runner.Shutdown();
