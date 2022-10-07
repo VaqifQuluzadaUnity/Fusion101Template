@@ -1,11 +1,12 @@
 using DynamicBox.EventManagement;
 using DynamicBox.NetworkEvents;
 using Fusion;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class NetworkZombieSpawner : NetworkBehaviour
 {
-	[SerializeField] private Transform[] zombieSpawnPoints=new Transform[0];
+	[SerializeField] private List<Transform> zombieSpawnPoints=new List<Transform>();
 
 	[SerializeField] private NetworkPrefabRef[] zombiePrefabs;
 
@@ -50,13 +51,21 @@ public class NetworkZombieSpawner : NetworkBehaviour
 
 	private void SpawnZombie()
 	{
+		if (zombieSpawnPoints.Count <=0)
+		{
+			foreach(GameObject zSpawnPoint in GameObject.FindGameObjectsWithTag("ZombieSpawnPoint"))
+			{
+				zombieSpawnPoints.Add(zSpawnPoint.transform);
+			}
+		}
+
 		if (!zombieSpawnTimer.ExpiredOrNotRunning(Runner))
 		{
 			return;
 		}
 
 		// Define spawn pos
-		int randomSpawnIndex = Random.Range(0,zombieSpawnPoints.Length);
+		int randomSpawnIndex = Random.Range(0,zombieSpawnPoints.Count);
 
 		Vector3 spawnPos = zombieSpawnPoints[randomSpawnIndex].position;
 

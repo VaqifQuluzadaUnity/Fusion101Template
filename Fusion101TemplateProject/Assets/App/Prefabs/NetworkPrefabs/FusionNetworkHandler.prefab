@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 4578324149554519938}
   - component: {fileID: 4578324149554519937}
   - component: {fileID: 4578324149554520062}
-  - component: {fileID: 313972470801799537}
   m_Layer: 5
   m_Name: FusionNetworkHandler
   m_TagString: Untagged
@@ -53,7 +52,12 @@ MonoBehaviour:
   networkRunnerPrefab: {fileID: 4229437503800163072, guid: b6577169066f74742a54b7dcd173375c,
     type: 3}
   localInputHandler: {fileID: 4578324149554520062}
-  hostMigrationHandler: {fileID: 313972470801799537}
+  hostMigrationHandler: {fileID: 0}
+  networkSpawner: {fileID: 683089532814341381, guid: dfce09941a105a8468a99a7c34534945,
+    type: 3}
+  zombieSpawner: {fileID: 3360924078132327519, guid: 364b108e108d03940baa422571fe7f95,
+    type: 3}
+  currentNetworkRunner: {fileID: 0}
 --- !u!114 &4578324149554520062
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -67,17 +71,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shootRate: 0.25
---- !u!114 &313972470801799537
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4578324149554519939}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8b213641d9e62f24cbfae8ac5fee7f99, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  networkRunnerPrefab: {fileID: 4229437503800163072, guid: b6577169066f74742a54b7dcd173375c,
-    type: 3}

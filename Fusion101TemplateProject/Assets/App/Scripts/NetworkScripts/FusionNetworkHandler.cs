@@ -20,16 +20,23 @@ namespace DynamicBox.Controllers
 
 		[SerializeField] private LocalInputHandler localInputHandler;
 
-		[SerializeField] private HostMigrationHandler hostMigrationHandler;
+		[SerializeField] private NetworkSpawner networkSpawner;
+
+		[SerializeField] private NetworkZombieSpawner zombieSpawner;
 		
 		private NetworkSceneManagerDefault sceneManager;
 
-		private NetworkRunner currentNetworkRunner;
+		public NetworkRunner currentNetworkRunner;
+
+		private NetworkSpawner networkSpawnerInstance;
+
+		private NetworkZombieSpawner zombieSpawnerInstance;
+
+		private byte[] connectionToken;
 
 		private int sessionCount;
 
 		private int currentSceneIndex;
-
 
 		#region Player Input Properties
 
@@ -45,6 +52,8 @@ namespace DynamicBox.Controllers
 			}
 			instance = this;
 			DontDestroyOnLoad(this);
+
+			connectionToken = Guid.NewGuid().ToByteArray();
 		}
 
 		private void Start()
@@ -109,7 +118,7 @@ namespace DynamicBox.Controllers
 
 		public void OnConnectFailed(NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason)
 		{
-			print(reason);
+			runner.Shutdown();
 		}
 
 		public void OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token)
@@ -145,6 +154,13 @@ namespace DynamicBox.Controllers
 			{
 				return;
 			}
+			if(networkSpawnerInstance==null || zombieSpawnerInstance == null)
+			{
+				networkSpawnerInstance = runner.Spawn(networkSpawner);
+
+				zombieSpawnerInstance = runner.Spawn(zombieSpawner);
+			}
+
 			print("Spawning player");
 
 			StartCoroutine(WaitUntilSceneDone(player));
@@ -154,6 +170,7 @@ namespace DynamicBox.Controllers
 		{
 			if (runner.IsServer)
 			{
+				Debug.Log(player);
 				EventManager.Instance.Raise(new OnPlayerLeftEvent(player));
 			}
 		}
@@ -219,7 +236,8 @@ namespace DynamicBox.Controllers
 				(new StartGameArgs()
 				{
 					GameMode = GameMode.Client,
-					SessionName = roomName
+					SessionName = roomName,
+					ConnectionToken = FusionNetworkHandler.instance.GetConnectionToken(),
 				}
 				);
 
@@ -254,7 +272,8 @@ namespace DynamicBox.Controllers
 				Scene = roomData.mapSceneIndex,
 				PlayerCount = roomData.roomPlayerCount,
 				SceneManager = sceneManager,
-				SessionProperties = sessionProperties
+				SessionProperties = sessionProperties,
+				ConnectionToken = FusionNetworkHandler.instance.GetConnectionToken(),
 			};
 
 			await currentNetworkRunner.StartGame(roomCreateParams);
@@ -292,12 +311,7 @@ namespace DynamicBox.Controllers
 
 		}
 
-		private void SetupRunnerCallbackListeners(NetworkRunner runner)
-		{
-			runner.AddCallbacks(this);
-			runner.AddCallbacks(localInputHandler);
-			runner.AddCallbacks(hostMigrationHandler);
-		}
+		
 
 		IEnumerator WaitUntilSceneDone(PlayerRef player)
 		{
@@ -310,6 +324,22 @@ namespace DynamicBox.Controllers
 
 		#region Public Methods
 
+		public void SetupRunnerCallbackListeners(NetworkRunner runner)
+		{
+			runner.AddCallbacks(this);
+			runner.AddCallbacks(localInputHandler);
+		}
+
+		public byte[] GetConnectionToken()
+		{
+			if (connectionToken == null)
+			{
+				connectionToken = Guid.NewGuid().ToByteArray();
+			}
+
+			return connectionToken;
+		}
+
 		public async void JoinLobbyAndStartGame(RoomData roomData)
 		{
 			Task<StartGameResult> task = currentNetworkRunner.JoinSessionLobby(SessionLobby.Custom, roomData.lobbyName);
@@ -320,7 +350,6 @@ namespace DynamicBox.Controllers
 
 			CreateRoom(roomData);
 		}
-
 
 		#endregion
 	}

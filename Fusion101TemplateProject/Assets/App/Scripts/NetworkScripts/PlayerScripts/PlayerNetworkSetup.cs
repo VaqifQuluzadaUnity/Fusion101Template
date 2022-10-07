@@ -15,6 +15,7 @@ public class PlayerNetworkSetup : NetworkBehaviour
 
 	public override void Spawned()
 	{
+		print("spawned " +Object.Id);
 		if (!Object.HasInputAuthority)
 		{
 			playerModel.material = enemyMat;

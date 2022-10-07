@@ -37,7 +37,6 @@ public class LocalInputHandler : MonoBehaviour,INetworkRunnerCallbacks
 
 		if (Input.GetMouseButtonDown(0))
 		{
-			Debug.Log(shootCooldown.ExpiredOrNotRunning(runner));
 
 			if (shootCooldown.ExpiredOrNotRunning(runner) ==false)
 			{
